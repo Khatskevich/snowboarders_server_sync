@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from chat.models import Chat, Message, UserChatRelation
+from chat.models import Chat, Message, UserChatRelation, DialogRelation
 from rest.http_statuses import HTTP_DOES_NOT_EXIST, HTTP_OK
 from rest.rest_helper import get_validated_serializer, get_user_from_validated_data
 from rest.serializers import IdSerializer, UserSerializer, UserHashSerializer
@@ -88,6 +88,18 @@ class CreateChatSerializer(serializers.ModelSerializer):
         model = Chat
         exclude = ('id','creation_time',)
 
+def add_users_to_chat(chat, user_ids):
+    for user_id in user_ids:
+        try:
+            chat_user = User.objects.get(id=user_id)
+            user_chat_relation = UserChatRelation()
+            user_chat_relation.chat_id = chat
+            user_chat_relation.user_id = chat_user
+            user_chat_relation.save()
+        except Exception:
+            return Response("", status=HTTP_DOES_NOT_EXIST)
+
+
 @api_view(['POST'])
 def create(request):
     """
@@ -102,13 +114,24 @@ def create(request):
     user_ids = sdata['user_ids']
     if user.pk not in user_ids:
         user_ids.append(user.pk)
-    for user_id in user_ids:
-        try:
-            chat_user = User.objects.get(id=user_id)
-            user_chat_relation = UserChatRelation()
-            user_chat_relation.chat_id = chat
-            user_chat_relation.user_id = chat_user
-            user_chat_relation.save()
-        except Exception:
-            return Response("", status=HTTP_DOES_NOT_EXIST)
+    add_users_to_chat(chat, user_ids)
     return Response("", status=HTTP_OK)
+
+@api_view(['POST'])
+def get_chat_with_user(request):
+    """
+    Find or create chat with user
+    ---
+    response_serializer: ChatSerializer
+    request_serializer: IdSerializer
+    """
+    sdata = get_validated_serializer(request=request, serializer=IdSerializer).validated_data
+    user = get_user_from_validated_data(sdata)
+    try:
+        opponent = User.objects.get(id=sdata['id'])
+    except Exception:
+        return Response("", status=HTTP_DOES_NOT_EXIST)
+    chat = DialogRelation.find_or_create(user,opponent)
+    return Response(ChatSerializer(chat).data, status=HTTP_OK)
+
+

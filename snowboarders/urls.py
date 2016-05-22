@@ -12,9 +12,10 @@ api_user_urls = [
 
 api_chat_urls = [
     url(r'^send_message/$', views_chat.send_message),
-    url(r'^create/$', views_chat.create),
+    #url(r'^create/$', views_chat.create),
     url(r'^get_my/$', views_chat.get_my),
     url(r'^get_my_list/$', views_chat.get_my_list),
+    url(r'^get_with_user/$', views_chat.get_chat_with_user),
 ]
 
 urlpatterns = [
