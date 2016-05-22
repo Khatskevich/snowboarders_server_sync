@@ -11,11 +11,11 @@ class Chat(models.Model):
     creation_time = models.DateTimeField(auto_now_add=True, editable=True)
 
 class UserChatRelation(models.Model):
-    chat_id = models.ForeignKey(Chat, db_index=True,related_name='userchatrelations')
-    user_id = models.ForeignKey(User, db_index=True,related_name='userchatrelations')
+    chat = models.ForeignKey(Chat, db_index=True,related_name='userchatrelations')
+    user = models.ForeignKey(User, db_index=True,related_name='userchatrelations')
 
 class DialogRelation(models.Model):
-    chat_id = models.ForeignKey(Chat, db_index=True,related_name='dialogrelations')
+    chat = models.ForeignKey(Chat, db_index=True,related_name='dialogrelations')
     user_1 = models.ForeignKey(User, db_index=True,related_name='user_1_chat')
     user_2 = models.ForeignKey(User, db_index=True,related_name='user_2_chat')
 
@@ -39,7 +39,7 @@ class DialogRelation(models.Model):
         return chat
 
 class Message(models.Model):
-    sender_id = models.ForeignKey(User, db_index=True)
-    chat_id = models.ForeignKey(Chat, db_index=True)
+    sender = models.ForeignKey(User, db_index=True)
+    chat = models.ForeignKey(Chat, db_index=True)
     creation_time = models.DateTimeField(auto_now_add=True, editable=True)
     text = models.TextField()

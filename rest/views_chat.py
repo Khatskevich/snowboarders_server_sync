@@ -22,7 +22,7 @@ class MessageSerializer(serializers.ModelSerializer):
 class MessageSendSerializer(serializers.ModelSerializer, UserHashSerializer):
     class Meta:
         model = Message
-        exclude = ('id','sender_id','creation_time',)
+        exclude = ('id','sender','creation_time',)
 
 @api_view(['POST'])
 def send_message(request):
@@ -36,13 +36,13 @@ def send_message(request):
     sdata = get_validated_serializer(request=request, serializer=MessageSendSerializer).validated_data
     user = get_user_from_validated_data(sdata)
     try:
-        UserChatRelation.objects.get(chat_id=sdata['chat_id'],user_id=sdata['user_id'])
-        chat = Chat.objects.get(id=sdata['chat_id'])
+        UserChatRelation.objects.get(chat=sdata['chat'],user=sdata['user'])
+        chat = Chat.objects.get(id=sdata['chat'])
     except Exception:
         return Response("", status=HTTP_DOES_NOT_EXIST)
     message = Message()
-    message.chat_id = chat
-    message.sender_id = user
+    message.chat = chat
+    message.sender = user
     message.text = sdata['text']
     message.save()
     return Response("", status=HTTP_OK)
@@ -61,7 +61,7 @@ def get_my(request):
     sdata = get_validated_serializer(request=request, serializer=IdSerializer).validated_data
     user = get_user_from_validated_data(sdata)
     try:
-        chat = Chat.objects.get(userchatrelations__user_id=user,id=sdata['id'])
+        chat = Chat.objects.get(userchatrelations__user=user,id=sdata['id'])
     except Exception:
         return Response("", status=HTTP_DOES_NOT_EXIST)
     return Response(ChatSerializer(chat).data, status=HTTP_OK)
@@ -75,7 +75,7 @@ def get_my_list(request):
     """
     sdata = get_validated_serializer(request=request, serializer=UserHashSerializer).validated_data
     user = get_user_from_validated_data(sdata)
-    chats = Chat.objects.filter(userchatrelations__user_id=user)
+    chats = Chat.objects.filter(userchatrelations__user=user)
     return Response(ChatSerializer(chats,many=True).data, status=HTTP_OK)
 
 class CreateChatSerializer(serializers.ModelSerializer):
@@ -93,8 +93,8 @@ def add_users_to_chat(chat, user_ids):
         try:
             chat_user = User.objects.get(id=user_id)
             user_chat_relation = UserChatRelation()
-            user_chat_relation.chat_id = chat
-            user_chat_relation.user_id = chat_user
+            user_chat_relation.chat = chat
+            user_chat_relation.user = chat_user
             user_chat_relation.save()
         except Exception:
             return Response("", status=HTTP_DOES_NOT_EXIST)
