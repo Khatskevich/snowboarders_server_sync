@@ -16,7 +16,7 @@ class UserChatRelation(models.Model):
 
 class DialogRelation(models.Model):
     chat_id = models.ForeignKey(Chat, db_index=True,related_name='dialogrelations')
-    user_1 = models.ForeignKey(User, db_index=True,elated_name='user_1_chat')
+    user_1 = models.ForeignKey(User, db_index=True,related_name='user_1_chat')
     user_2 = models.ForeignKey(User, db_index=True,related_name='user_2_chat')
 
     @staticmethod
