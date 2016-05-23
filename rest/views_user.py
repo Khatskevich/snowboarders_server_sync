@@ -63,7 +63,7 @@ def login(request):
           message: User doesn't exist
     """
     sdata = get_validated_serializer(request=request, serializer=UserLoginSerializer).validated_data
-    user = User.objects.filter(phone=sdata['phone'])
+    user = User.objects.filter(phone=sdata['phone']).first()
     if ( user is None or not user.check_password(sdata['password'])):
         return Response("No user with such user", status=HTTP_DOES_NOT_EXIST)
     session = Session.get_for_user(user)
