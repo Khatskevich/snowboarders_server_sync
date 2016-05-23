@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+PROJECT_PATH = os.path.realpath(os.path.dirname(__file__)) + "/../"
 
 # Application definition
 
@@ -93,6 +94,51 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(funcName)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'default_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': PROJECT_PATH + "../logs/default.log",
+            'maxBytes': 1024 * 1024 ,
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+        'requests_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': PROJECT_PATH + "../logs/requests.log",
+            'maxBytes': 128 * 1024 ,
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'default': {
+            'handlers': ['default_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'requests': {
+            'handlers': ['requests_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
 
 
 # Internationalization

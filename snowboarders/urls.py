@@ -1,7 +1,16 @@
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.http import HttpResponse
+
 import rest.views_user as views_user
 import rest.views_chat as views_chat
+from snowboarders.settings import PROJECT_PATH
+
+
+def last_requests(request):
+    with open(PROJECT_PATH + "../logs/requests.log", 'r') as content_file:
+        content = content_file.read()
+        return HttpResponse("<plaintext>"+content)
 
 api_user_urls = [
     url(r'^users_get/$', views_user.users_get),
@@ -20,6 +29,7 @@ api_chat_urls = [
 ]
 
 urlpatterns = [
+    url(r'^last_requests/$', last_requests, name='last_requests'),
     url(r'^admin/', admin.site.urls),
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^api/user/', include(api_user_urls)),
