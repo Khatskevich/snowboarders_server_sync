@@ -14,7 +14,7 @@ class UsersGetSerializer(UserHashSerializer):
 class IdSerializer(UserHashSerializer):
     id = serializers.IntegerField()
 
-class UserSerializer(serializers.ModelSerializer, UserHashSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ("is_superuser", "is_staff", "is_active", "user_permissions", "groups", 'password',)
