@@ -1,5 +1,6 @@
 import socket
 
+from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -88,7 +89,7 @@ def get_my_list(request):
     """
     sdata = get_validated_serializer(request=request, serializer=UserHashSerializer).validated_data
     user = get_user_from_validated_data(sdata)
-    chats = Chat.objects.filter(userchatrelations__user=user)
+    chats = Chat.objects.filter(Q(dialogrelations__user_1=user) | Q(dialogrelations__user_2=user))
     return Response(ChatSerializer(chats,many=True).data, status=HTTP_OK)
 
 class CreateChatSerializer(serializers.ModelSerializer):
