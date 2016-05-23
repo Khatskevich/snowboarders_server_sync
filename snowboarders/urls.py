@@ -16,6 +16,7 @@ api_chat_urls = [
     url(r'^get_my/$', views_chat.get_my),
     url(r'^get_my_list/$', views_chat.get_my_list),
     url(r'^get_with_user/$', views_chat.get_chat_with_user),
+    url(r'^get_chat_history/$', views_chat.get_chat_history),
 ]
 
 urlpatterns = [

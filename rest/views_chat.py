@@ -135,3 +135,26 @@ def get_chat_with_user(request):
     return Response(ChatSerializer(chat).data, status=HTTP_OK)
 
 
+class GetChatHistorySerializer(IdSerializer):
+    pass
+
+@api_view(['POST'])
+def get_chat_history(request):
+    """
+    ---
+    response_serializer: MessageSerializer
+    request_serializer: GetChatHistorySerializer
+    """
+    sdata = get_validated_serializer(request=request, serializer=GetChatHistorySerializer).validated_data
+    user = get_user_from_validated_data(sdata)
+    try:
+        dialog_rel = DialogRelation.objects.get(id=sdata['id'])
+        if dialog_rel.user_1 != user and dialog_rel.user_2 != user:
+            raise Exception()
+    except Exception:
+        return Response("", status=HTTP_DOES_NOT_EXIST)
+    messages = Message.objects.filter(chat=sdata['id']).order_by("-creation_time")
+    return Response(MessageSerializer(messages).data, status=HTTP_OK)
+
+
+
