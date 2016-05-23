@@ -1,3 +1,5 @@
+import socket
+
 from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -45,6 +47,17 @@ def send_message(request):
     message.sender = user
     message.text = sdata['text']
     message.save()
+
+
+    TCP_IP = 'localhost'
+    TCP_PORT = 43455
+    MSG = MessageSerializer(message).data
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((TCP_IP, TCP_PORT))
+    s.send(MSG)
+    s.close()
+
     return Response("", status=HTTP_OK)
 
 
@@ -154,7 +167,7 @@ def get_chat_history(request):
     except Exception:
         return Response("", status=HTTP_DOES_NOT_EXIST)
     messages = Message.objects.filter(chat=sdata['id']).order_by("-creation_time")
-    return Response(MessageSerializer(messages).data, status=HTTP_OK)
+    return Response(MessageSerializer(messages, many=True).data, status=HTTP_OK)
 
 
 
