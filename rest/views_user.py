@@ -67,7 +67,7 @@ def login(request):
     if ( user is None or not user.check_password(sdata['password'])):
         return Response("No user with such user", status=HTTP_DOES_NOT_EXIST)
     session = Session.get_for_user(user)
-    return Response( UserHashSerializer({"hash": session.hash}).data , status=HTTP_OK)
+    return Response( IdSerializer({"hash": session.hash, 'id':user.pk}).data , status=HTTP_OK)
 
 
 @api_view(['POST'])
