@@ -81,6 +81,9 @@ def register(request):
     password = sdata['password']
     del sdata['password']
     user = User()
+    user.last_name = sdata['last_name']
+    user.first_name = sdata['first_name']
+    user.phone = sdata['phone']
     user.set_password(password)
     user.save()
     session = Session.get_for_user(user)
