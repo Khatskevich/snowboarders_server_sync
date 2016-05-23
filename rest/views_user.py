@@ -19,6 +19,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         model = User
         exclude = ("is_superuser", "is_staff", "is_active", "user_permissions", "groups",)
 
+class OnlyIdSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+class UsersGetSerializer(serializers.Serializer):
+    pass
+
+
 
 
 @api_view(['POST'])
@@ -26,13 +33,12 @@ def user_get(request):
     """
     ---
     response_serializer: UserSerializer
-    request_serializer: IdSerializer
+    request_serializer: OnlyIdSerializer
     responseMessages:
         - code: HTTP_DOES_NOT_EXIST
           message: User doesn't exist
     """
-    sdata = get_validated_serializer(request=request, serializer=IdSerializer).validated_data
-    user = get_user_from_validated_data(sdata)
+    sdata = get_validated_serializer(request=request, serializer=OnlyIdSerializer).validated_data
     try:
         user = User.objects.get(id=sdata['id'])
     except Exception:
@@ -44,10 +50,9 @@ def users_get(request):
     """
     ---
     response_serializer: UserSerializer
-    request_serializer: UserHashSerializer
+    request_serializer: UsersGetSerializer
     """
-    sdata = get_validated_serializer(request=request, serializer=UserHashSerializer).validated_data
-    user = get_user_from_validated_data(sdata)
+    sdata = get_validated_serializer(request=request, serializer=UsersGetSerializer).validated_data
     users = User.objects.all()
     return Response(UserSerializer(users, many=True).data, status=HTTP_OK)
 
