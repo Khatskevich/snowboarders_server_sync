@@ -38,9 +38,8 @@ def send_message(request):
     """
     sdata = get_validated_serializer(request=request, serializer=MessageSendSerializer).validated_data
     user = get_user_from_validated_data(sdata)
-    try:
-        chat = Chat.objects.get(Q(dialogrelations__user_1=user) | Q(dialogrelations__user_2=user)).filter(id=sdata['chat'])
-    except Exception:
+    chat = Chat.objects.filter(Q(dialogrelations__user_1=user) | Q(dialogrelations__user_2=user)).filter(id=sdata['chat']).first()
+    if chat is None:
         return Response("", status=HTTP_DOES_NOT_EXIST)
     message = Message()
     message.chat = chat
