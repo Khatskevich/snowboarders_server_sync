@@ -55,17 +55,13 @@ def send_message(request):
 
     TCP_IP = 'localhost'
     TCP_PORT = 43455
-    #MSG = str(MessageContainerSerializer({ "message_type":1, "message_data":message}).data)
-    #MSG = str(MessageSerializer(message).data)
     import json
-    MSG = json.dumps(message)
-    MSG = '{ "message_type":1, "message_data": '+ MSG + '}'
+    MSG = json.dumps(MessageContainerSerializer({ "message_type":1, "message_data":message}).data)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((TCP_IP, TCP_PORT))
     s.send(MSG)
     print MSG
     s.close()
-
     return Response("", status=HTTP_OK)
 
 
