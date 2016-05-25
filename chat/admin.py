@@ -13,7 +13,7 @@ class MessageAdmin(admin.ModelAdmin):
     pass
 
 class DialogRelationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('chat', 'user_1', 'user_2',)
 
 admin.site.register(DialogRelation, DialogRelationAdmin)
 
