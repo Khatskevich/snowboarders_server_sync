@@ -10,7 +10,7 @@ class UserChatRelationAdmin(admin.ModelAdmin):
     pass
 
 class MessageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('text', 'sender', 'chat',)
 
 class DialogRelationAdmin(admin.ModelAdmin):
     list_display = ('chat', 'user_1', 'user_2',)

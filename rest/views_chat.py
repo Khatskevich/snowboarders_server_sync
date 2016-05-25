@@ -27,6 +27,11 @@ class MessageSendSerializer(serializers.ModelSerializer, UserHashSerializer):
         model = Message
         exclude = ('id','sender','creation_time',)
 
+class MessageContainerSerializer(serializers.Serializer):
+    message_type = serializers.IntegerField()
+    message_data = MessageSerializer()
+
+
 @api_view(['POST'])
 def send_message(request):
     """
@@ -50,7 +55,7 @@ def send_message(request):
 
     TCP_IP = 'localhost'
     TCP_PORT = 43455
-    MSG = str(MessageSerializer(message).data)
+    MSG = str(MessageContainerSerializer({ "message_type":1, "message_data":message}).data)
 
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((TCP_IP, TCP_PORT))
