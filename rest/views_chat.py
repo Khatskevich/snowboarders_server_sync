@@ -38,7 +38,7 @@ def send_message(request):
     """
     sdata = get_validated_serializer(request=request, serializer=MessageSendSerializer).validated_data
     user = get_user_from_validated_data(sdata)
-    chat = Chat.objects.filter(Q(dialogrelations__user_1=user) | Q(dialogrelations__user_2=user)).filter(id=sdata['chat']).first()
+    chat = Chat.objects.filter(Q(dialogrelations__user_1=user) | Q(dialogrelations__user_2=user)).filter(id=sdata['chat'].pk).first()
     if chat is None:
         return Response("", status=HTTP_DOES_NOT_EXIST)
     message = Message()
@@ -55,6 +55,7 @@ def send_message(request):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((TCP_IP, TCP_PORT))
     s.send(MSG)
+    print MSG
     s.close()
 
     return Response("", status=HTTP_OK)
