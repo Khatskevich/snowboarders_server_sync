@@ -166,7 +166,7 @@ def get_chat_history(request):
     sdata = get_validated_serializer(request=request, serializer=GetChatHistorySerializer).validated_data
     user = get_user_from_validated_data(sdata)
     try:
-        dialog_rel = DialogRelation.objects.get(id=sdata['id'])
+        dialog_rel = DialogRelation.objects.get(chat__id=sdata['id'])
         if dialog_rel.user_1 != user and dialog_rel.user_2 != user:
             raise Exception()
     except Exception:
