@@ -170,7 +170,7 @@ def get_chat_history(request):
             raise Exception()
     except Exception:
         return Response("", status=HTTP_DOES_NOT_EXIST)
-    messages = Message.objects.filter(chat=sdata['id']).order_by("-creation_time")
+    messages = Message.objects.filter(chat=sdata['id']).order_by("creation_time")
     return Response(MessageSerializer(messages, many=True).data, status=HTTP_OK)
 
 
