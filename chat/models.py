@@ -37,7 +37,7 @@ class DialogRelation(models.Model):
         chat.name = user_1.first_name + " " + user_2.first_name
         chat.save()
         dialog = DialogRelation()
-        dialog.chat_id = chat
+        dialog.chat = chat
         dialog.user_1 = user_1
         dialog.user_2 = user_2
         dialog.save()
