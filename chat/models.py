@@ -47,6 +47,6 @@ class Message(models.Model):
     sender = models.ForeignKey(User, db_index=True)
     chat = models.ForeignKey(Chat, db_index=True)
     creation_time = models.DateTimeField(auto_now_add=True, editable=True)
-    text = models.TextField()
+    text = models.TextField(blank=True)
     def  __unicode__(self):
         return str(self.pk)
