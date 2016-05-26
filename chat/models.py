@@ -32,7 +32,7 @@ class DialogRelation(models.Model):
             user_2 = user
         dialog = DialogRelation.objects.filter(user_1=user_1, user_2 = user_2).first()
         if dialog != None:
-            return dialog.chat_id
+            return dialog.chat
         chat = Chat()
         chat.name = user_1.first_name + " " + user_2.first_name
         chat.save()
