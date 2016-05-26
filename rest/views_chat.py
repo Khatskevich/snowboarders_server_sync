@@ -37,6 +37,7 @@ def send_message(request):
     """
     ---
     request_serializer: MessageSendSerializer
+    response_serializer: MessageSerializer
     responseMessages:
         - code: HTTP_DOES_NOT_EXIST
           message: doesn't exist
@@ -62,7 +63,7 @@ def send_message(request):
     s.send(MSG)
     print MSG
     s.close()
-    return Response("", status=HTTP_OK)
+    return Response(MessageSerializer(message).data, status=HTTP_OK)
 
 
 @api_view(['POST'])
