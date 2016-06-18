@@ -53,3 +53,15 @@ def get_my(request):
         return Response("", status=HTTP_DOES_NOT_EXIST)
 
     return Response(TrainingSerializer(training).data, status=HTTP_OK)
+
+@api_view(['POST'])
+def create(request):
+    """
+    ---
+    request_serializer: TrainingSerializer
+    """
+    sdata = get_validated_serializer(request=request, serializer=IdSerializer).validated_data
+    user = get_user_from_validated_data(sdata)
+    training = Training(learner=user,**sdata)
+    training.save()
+    return Response("", status=HTTP_OK)
