@@ -4,6 +4,7 @@ from django.http import HttpResponse
 
 import rest.views_user as views_user
 import rest.views_chat as views_chat
+import rest.views_training as views_training
 from snowboarders.settings import PROJECT_PATH
 
 
@@ -28,10 +29,17 @@ api_chat_urls = [
     url(r'^get_chat_history/$', views_chat.get_chat_history),
 ]
 
+api_training_urls = [
+    url(r'^create/$', views_training.create),
+    url(r'^get_my/$', views_training.get_my),
+    url(r'^get_my_list/$', views_training.get_my_list),
+]
+
 urlpatterns = [
     url(r'^last_requests/$', last_requests, name='last_requests'),
     url(r'^admin/', admin.site.urls),
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^api/user/', include(api_user_urls)),
     url(r'^api/chat/', include(api_chat_urls)),
+    url(r'^api/training/', include(api_training_urls)),
 ]
