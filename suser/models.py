@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
                      is_superuser, **extra_fields):
         now = timezone.now()
         if not phone:
-            raise ValueError(_('The given username must be set'))
+            raise ValueError('The given username must be set')
         email = self.normalize_email(email)
         user = self.model(phone=phone, email=email, first_name=first_name, last_name=last_name,
                           is_staff=is_staff, is_active=False,

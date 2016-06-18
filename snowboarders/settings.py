@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'session',
     'chat',
     'rest',
+    'training',
 ]
 
 MIDDLEWARE_CLASSES = [
