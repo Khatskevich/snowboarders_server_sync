@@ -30,6 +30,9 @@ class GetMyListSerializer(UserHashSerializer):
     )
     i_am_as = serializers.ChoiceField(choices=(('l','learner'), ('c','couch'),))
 
+class GetListSerializer(UserHashSerializer):
+    pass
+
 @api_view(['POST'])
 def get_my_list(request):
     """
@@ -91,3 +94,18 @@ def create(request):
     training = Training(learner=user,status=S_WAITS_FOR_COUCH, **sdata)
     training.save()
     return Response("", status=HTTP_OK)
+
+@api_view(['POST'])
+def get_list(request):
+    """
+    ---
+    request_serializer: GetListSerializer
+    response_serializer: TrainingSerializer
+    responseMessages:
+        - code: HTTP_YOUR_TYPE_OF_USER_CANNOT_DO_THIS
+          message: user is not a couch
+    """
+    sdata = get_validated_serializer(request=request, serializer=GetListSerializer).validated_data
+    user = get_user_from_validated_data(sdata, check_couch=True)
+    trainings = Training.objects.filter(status=S_WAITS_FOR_COUCH)
+    return Response(TrainingSerializer(trainings, many=True).data, status=HTTP_OK)

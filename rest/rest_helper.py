@@ -6,7 +6,7 @@ from session.models import Session
 
 logr_requests = logging.getLogger('requests')
 
-def get_user_from_validated_data(data):
+def get_user_from_validated_data(data,check_couch=False):
     user = None
     try:
         hash = data['hash']
@@ -15,6 +15,9 @@ def get_user_from_validated_data(data):
         user = session.user
     except Exception:
         raise MY_REST_EXCEPTION(detail="Wrong session", status=HTTP_WRONG_SESSION)
+    if check_couch == True:
+        if not user.is_couch == True:
+            raise MY_REST_EXCEPTION(detail="Wrong type of user", status=HTTP_YOUR_TYPE_OF_USER_CANNOT_DO_THIS)
     return user
 
 def get_validated_serializer(request, serializer):
