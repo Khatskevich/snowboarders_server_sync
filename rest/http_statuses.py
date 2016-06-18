@@ -8,3 +8,4 @@ HTTP_LATE = 409  # For example : when you trying to take order which is already 
 HTTP_IT_IS_NOT_YOUR_OBJECT = 468
 HTTP_WRONG_REQUEST_FORMAT = 470  # wrong format of data in request ( required field is messing or something...)
 HTTP_IT_IS_CURRENTLY_PERFORMED = 208
+HTTP_TRIP_STATUS_ERROR = 467

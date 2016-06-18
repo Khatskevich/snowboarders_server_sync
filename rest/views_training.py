@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from drf_extra_fields.geo_fields import PointField
 from rest_framework import serializers
 from rest_framework.decorators import api_view
@@ -7,7 +8,7 @@ from rest_framework.response import Response
 from rest.http_statuses import HTTP_DOES_NOT_EXIST, HTTP_OK
 from rest.rest_helper import get_validated_serializer, get_user_from_validated_data
 from rest.serializers import IdSerializer, UserHashSerializer
-from training.constants import STATUSES_TRAINING, S_WAITS_FOR_COUCH
+from training.constants import STATUSES_TRAINING, S_WAITS_FOR_COUCH, S_APPROVED
 from training.models import Training
 
 
@@ -109,3 +110,24 @@ def get_list(request):
     user = get_user_from_validated_data(sdata, check_couch=True)
     trainings = Training.objects.filter(status=S_WAITS_FOR_COUCH)
     return Response(TrainingSerializer(trainings, many=True).data, status=HTTP_OK)
+
+
+
+@api_view(['POST'])
+def approve(request):
+    """
+    ---
+    response_serializer: TrainingSerializer
+    request_serializer: IdSerializer
+    responseMessages:
+        - code: HTTP_TRIP_STATUS_ERROR
+          message: tis trip is currently approved
+    """
+    sdata = get_validated_serializer(request=request, serializer=IdSerializer).validated_data
+    user = get_user_from_validated_data(sdata,check_couch=True)
+    Training.rest_update_single_column(
+        Training.objects.filter(id=sdata['id'], status=S_WAITS_FOR_COUCH),
+        {"status":S_APPROVED,"couch":user})
+    training = get_object_or_404(Training, id=sdata['id'])
+    return Response(TrainingSerializer(training).data, status=HTTP_OK)
+

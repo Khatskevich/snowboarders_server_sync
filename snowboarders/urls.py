@@ -34,6 +34,7 @@ api_training_urls = [
     url(r'^get_my/$', views_training.get_my),
     url(r'^get_my_list/$', views_training.get_my_list),
     url(r'^get_list/$', views_training.get_list),
+    url(r'^approve/$', views_training.approve),
 ]
 
 urlpatterns = [
