@@ -61,7 +61,7 @@ def users_get(request):
 def login(request):
     """
     ---
-    response_serializer: UserHashSerializer
+    response_serializer: IdSerializer
     request_serializer: UserLoginSerializer
     responseMessages:
         - code: HTTP_DOES_NOT_EXIST
@@ -79,7 +79,7 @@ def login(request):
 def register(request):
     """
     ---
-    response_serializer: UserHashSerializer
+    response_serializer: IdSerializer
     request_serializer: UserRegisterSerializer
     """
     sdata = get_validated_serializer(request=request, serializer=UserRegisterSerializer).validated_data
@@ -89,4 +89,4 @@ def register(request):
     user.set_password(password)
     user.save()
     session = Session.get_for_user(user)
-    return Response( UserHashSerializer({"hash": session.hash}).data , status=HTTP_OK)
+    return Response( IdSerializer({"hash": session.hash, 'id':user.pk}).data , status=HTTP_OK)
