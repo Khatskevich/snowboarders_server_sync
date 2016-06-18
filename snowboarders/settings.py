@@ -161,4 +161,8 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'suser.User'
 
-STATIC_URL = '/static/'
+MEDIA_ROOT = "../static/"
+MEDIA_URL = "/static/"
+STATIC_URL = '/collected_static/'
+STATIC_ROOT = '../collected_static/'
+
