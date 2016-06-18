@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest.http_statuses import HTTP_DOES_NOT_EXIST, HTTP_OK
 from rest.rest_helper import get_validated_serializer, get_user_from_validated_data
 from rest.serializers import IdSerializer, UserHashSerializer
-from training.constants import STATUSES_TRAINING
+from training.constants import STATUSES_TRAINING, S_WAITS_FOR_COUCH
 from training.models import Training
 
 
@@ -22,7 +22,7 @@ class TrainingCreateSerializer(UserHashSerializer, serializers.ModelSerializer):
     place_point = PointField(required=False)
     class Meta:
         model = Training
-        exclude = ('learner',)
+        exclude = ('learner','status',)
 
 class GetMyListSerializer(UserHashSerializer):
     statuses = serializers.ListField(
@@ -88,6 +88,6 @@ def create(request):
     """
     sdata = get_validated_serializer(request=request, serializer=TrainingCreateSerializer).validated_data
     user = get_user_from_validated_data(sdata)
-    training = Training(learner=user, **sdata)
+    training = Training(learner=user,status=S_WAITS_FOR_COUCH, **sdata)
     training.save()
     return Response("", status=HTTP_OK)
