@@ -45,6 +45,6 @@ urlpatterns = [
     url(r'^api/user/', include(api_user_urls)),
     url(r'^api/chat/', include(api_chat_urls)),
     url(r'^api/training/', include(api_training_urls)),
-    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+    url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': settings.MEDIA_ROOT})
 ]
