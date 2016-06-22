@@ -15,9 +15,10 @@ class UserLoginSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=20)
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
-        exclude = ("is_superuser", "is_staff", "is_active", "user_permissions", "groups",)
+        exclude = ("is_superuser", "is_staff", "is_active", "user_permissions", "groups")
 
 class OnlyIdSerializer(serializers.Serializer):
     id = serializers.IntegerField()

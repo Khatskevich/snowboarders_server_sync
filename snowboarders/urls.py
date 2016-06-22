@@ -5,6 +5,7 @@ from django.http import HttpResponse
 import rest.views_user as views_user
 import rest.views_chat as views_chat
 import rest.views_training as views_training
+from snowboarders import settings
 from snowboarders.settings import PROJECT_PATH
 
 
@@ -44,4 +45,6 @@ urlpatterns = [
     url(r'^api/user/', include(api_user_urls)),
     url(r'^api/chat/', include(api_chat_urls)),
     url(r'^api/training/', include(api_training_urls)),
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.MEDIA_ROOT})
 ]
